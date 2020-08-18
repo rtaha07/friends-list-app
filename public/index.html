@@ -1,17 +1,31 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width initial-scale=1.0'>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width initial-scale=1.0" />
   <link rel="stylesheet" href="/public/style.css" />
-  <script src='/src/index.js' defer></script>
+  <!-- <script src="/src/index.js" defer></script> -->
 </head>
 
 <body>
-  <h1>Friends (The List)</h1>
-  <div id="app" class='container'></div>
-  <ul>
-  </ul>
+  <div class="container">
+    <h1>Friends (The List)</h1>
+    <form action='/users' method='POST'>
+      <input name='name' />
+      <button>Create</button>
+    </form>
+    <div id="app" class="friend-list">
+      <ul>
+        ${friends.map(friend => {
+        return
+        <li className="friend-name">`${Friend.name} `<a href='/friends/add'>+</a></li>
+        <!-- ${ friends.map(f => Friend {...f} key="{f.id}" />)} -->
+        }).join('')}
+      </ul>
+    </div>
+  </div>
+  <script src="/src/index.js" defer></script>
 </body>
 
 </html>
