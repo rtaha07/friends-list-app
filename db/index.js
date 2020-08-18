@@ -1,11 +1,10 @@
 const Sequelize = require('sequelize');
+const chalk = require('chalk');
 const { STRING, INTEGER, BOOLEAN } = Sequelize;
 const conn = new Sequelize(
   process.env.DATABASE_URL || 'postgres://localhost/friends_list_app',
   { logging: false }
 ); //pass false to the logging parameter to prevent sequelize from outputting SQL to console on execution
-
-const chalk = require('chalk');
 
 const Friend = conn.define('friend', {
   name: {
@@ -18,6 +17,7 @@ const Friend = conn.define('friend', {
   },
   ranking: {
     type: INTEGER,
+    //defaultValue: 1,
     get: function () {
       console.log(`${this.name} ranking`);
     },
@@ -35,47 +35,53 @@ user.beforeSave((friend) => {
 
 Friend.belongsTo(Friend);
 
-// const friendsList = async () => {
-//   try {
-//     await conn.sync({ force: true });
-//     const promises = [];
-//     while (promises.length < 5) {
-//       promises.push(
-//         Friend.create({
-//           name: faker.name.firstName(),
-//           isMore: faker.random.boolean(),
-//         })
-//       );
-//     }
-//     await Promise.all(promises);
-//   } catch (err) {
-//     console.log('Oops! there is an error');
-//     console.error(err.stack);
-//   }
-// };
-
-// const init = async () => {
-//   try {
-//     const friends = await friendsList();
-//     console.log(chalk.inverse('seeded friends'));
-//     friends.forEach((friend) => {
-//       console.log('------');
-//       console.log(friend.name);
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     //conn.close();
-//   }
-// };
+const friendsList = async () => {
+  try {
+    await conn.sync({ force: true });
+    console.log('Syncing success!');
+    const friends = await Promise.all([
+      await Friend.create({
+        name: 'Sally',
+        isMore: true,
+        ranking: 1,
+      }),
+      await Friend.create({
+        name: 'John',
+        isMore: false,
+        ranking: 2,
+      }),
+      await Friend.create({
+        name: 'Khalid',
+        isMore: false,
+        ranking: 3,
+      }),
+      await Friend.create({
+        name: 'Catherine',
+        isMore: false,
+        ranking: 4,
+      }),
+      await Friend.create({
+        name: 'Adam',
+        isMore: false,
+        ranking: 5,
+      }),
+    ]);
+    conn.close();
+    console.log(chalk.inverse('Seeding success!'));
+    console.log(JSON.stringify(friends, null, 2));
+  } catch (err) {
+    console.error('Oh there is an error!');
+    console.error(err.stack);
+    conn.close();
+  }
+};
 
 module.exports = {
   friendsList,
   conn,
-  //init,
   models: {
     Friend,
   },
 };
 
 friendsList();
-//init();

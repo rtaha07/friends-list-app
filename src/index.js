@@ -18,9 +18,7 @@ const { Friend } = require('../db').models;
 
 router.get('/', async (req, res, next) => {
   try {
-    const friends = await Friend.map((friend) => {
-      return friend.name;
-    });
+    const friends = await Friend.findAll({ group: 'name' });
     res.send(friends);
   } catch (err) {
     next(err);
@@ -39,7 +37,7 @@ router.post('/', async (req, res, next) => {
 router.get('/add', async (req, res, next) => {
   try {
     const friends = await Friend.findAll({
-      order: [['name']],
+      order: [['ranking']],
     });
     res.send(friends);
   } catch (err) {
@@ -50,8 +48,7 @@ router.get('/add', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const friend = await Friend.findByPk(req.params.id);
-    where: {
-    }
+
     res.send(friend);
   } catch (err) {
     next(err);
