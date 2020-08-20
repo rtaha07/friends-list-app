@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const conn = require('./db');
+//const conn = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,18 +12,18 @@ app.use(morgan('dev'));
 
 // Body parsing middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Static middleware
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/', express.static(path.join(__dirname, 'public')));
 
-// For all GET requests that aren't going to an API route,
-// we will send the index.html!
-app.get('/', (req, res, next) => {
-  res.redirect('friends');
-});
+// For all GET requests that aren't going to a route, redirected to Homepage route
+// app.get('/', (req, res, next) => {
+//   res.render('index.html');
+// });
 
-app.use('/friends', require('./src/index'));
+// Friends routes
+app.use('/api', require('./src/index'));
 
 // Handle 404 errors
 app.use((req, res, next) => {
@@ -34,22 +34,11 @@ app.use((req, res, next) => {
 
 // Error handling end-ware
 app.use((err, req, res, next) => {
-  console.error(err, typeof next);
   console.error(err.stack);
   res.status(err.status || 500);
   res.send(err.message || 'Internal server error');
 });
 
-const friendsList = async () => {
-  try {
-    await conn.sync();
-    console.log('The database is synced!');
-    app.listen(PORT, () => console.log(`Listening On Port ${PORT}`));
-  } catch (err) {
-    console.error(err);
-  }
-};
+app.listen(PORT, () => console.log(`Listening On Port ${PORT}`));
 
-//friendsList();
-
-module.exports = app;
+//module.exports = app;

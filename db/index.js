@@ -24,14 +24,14 @@ const Friend = conn.define('friend', {
   },
 });
 
-user.beforeSave((friend) => {
-  console.log(friend);
-  if (friend.isMore) {
-    console.log(
-      `${friend.name} is in the top with the highest number of friends`
-    );
-  }
-});
+// friend.beforeSave((friend) => {
+//   console.log(friend);
+//   if (friend.isMore) {
+//     console.log(
+//       `${friend.name} is in the top with the highest number of friends`
+//     );
+//   }
+// });
 
 Friend.belongsTo(Friend);
 
@@ -66,7 +66,7 @@ const friendsList = async () => {
         ranking: 5,
       }),
     ]);
-    conn.close();
+    //conn.close();
     console.log(chalk.inverse('Seeding success!'));
     console.log(JSON.stringify(friends, null, 2));
   } catch (err) {

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Friend } = require('../db').models;
 
-// const { Friend } = require('../db/index');
+const { Friend } = require('../db/index');
 
 // API routes
 // router.get('/', async (req, res, next) => {
@@ -19,16 +19,30 @@ const { Friend } = require('../db').models;
 router.get('/', async (req, res, next) => {
   try {
     const friends = await Friend.findAll({ group: 'name' });
-    res.send(friends);
+    res.json(friends);
   } catch (err) {
     next(err);
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/friends', async (req, res, next) => {
   try {
-    const friend = await Friend.create({ name: req.body.name });
-    res.redirect(`/friends/`);
+    const friend = await Friend.create({
+      name: req.body.name,
+      ranking: req.body.ranking,
+    });
+    res.redirect(`/friends/${friend.id}`);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/friends', async (req, res, next) => {
+  try {
+    const friends = await Friend.findAll({
+      order: [['ranking']],
+    });
+    res.json(friends);
   } catch (err) {
     next(err);
   }
@@ -36,9 +50,7 @@ router.post('/', async (req, res, next) => {
 
 router.get('/add', async (req, res, next) => {
   try {
-    const friends = await Friend.findAll({
-      order: [['ranking']],
-    });
+    const friends = await Friend.findAll();
     res.send(friends);
   } catch (err) {
     next(err);
@@ -48,7 +60,6 @@ router.get('/add', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const friend = await Friend.findByPk(req.params.id);
-
     res.send(friend);
   } catch (err) {
     next(err);
