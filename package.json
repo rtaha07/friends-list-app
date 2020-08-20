@@ -2,7 +2,7 @@
   "name": "friends-list-app",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "npm run start-server & npm run build-watch",
@@ -25,14 +25,13 @@
     "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
     "express": "^4.17.1",
-    "faker": "^4.1.0",
+    "html-template-tag": "^3.2.0",
     "morgan": "^1.10.0",
-    "pg": "^8.3.0",
-    "sequelize": "^6.3.4",
-    "uuid": "^8.3.0"
+    "pg": "^8.3.2",
+    "postgres": "^1.0.2",
+    "sequelize": "^6.3.4"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0",
     "nodemon": "^2.0.4",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"

@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width initial-scale=1.0" />
-    <!-- <link rel="stylesheet" href="style.css" /> -->
-  </head>
 
-  <body>
-    <div class="container">
-      <h1>Friends (The List)</h1>
-      <form action="/users" method="POST">
-        <input name="name" />
-        <button>Create</button>
-      </form>
-      <div id="app" class="friend-list">
-        <ul>
-          <!-- ${ friends.map(f => Friend {...f} key="{f.id}" />)} -->
-          <li className="friend-name">
-            ${Friend.name}<a href="/friends/add">+</a>
-          </li>
-        </ul>
-      </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width initial-scale=1.0" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css" rel="stylesheet" />
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+</head>
+
+<body>
+  <div class="container">
+    <h1>Friends (The List)</h1>
+    <form method="POST" action="api/friends">
+      <input name="name" />
+      <button><span onclick="create()" class="addName">Create</span></button>
+    </form>
+    <div id="app" class="friends-list">
+      <ul id="friendsList"></ul>
     </div>
-    <script src="/src/index.js" defer></script>
-  </body>
+  </div>
+  <script src="/index.js" defer></script>
+</body>
+
 </html>
