@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize');
 const chalk = require('chalk');
-const { STRING, INTEGER, BOOLEAN } = Sequelize;
-const conn = new Sequelize('postgres://localhost/friends_list'); //pass false to the logging parameter to prevent sequelize from outputting SQL to console on execution
+const { STRING, INTEGER } = Sequelize;
+const conn = new Sequelize(
+  process.env.DATABASE_URL || 'postgres://localhost/friends_list'
+); //pass false to the logging parameter to prevent sequelize from outputting SQL to console on execution
 
 const Friend = conn.define('friend', {
   name: {
@@ -11,9 +13,6 @@ const Friend = conn.define('friend', {
   ranking: {
     type: INTEGER,
     defaultValue: 1,
-    // get: function () {
-    //   console.log(`${this.name} ranking`);
-    // },
   },
 });
 
@@ -45,29 +44,19 @@ const friendsList = async () => {
         ranking: 5,
       }),
     ]);
-    //conn.close();
-    // const promises = friends.map((friend) =>
-    //   Friend.create({
-    //     name: friend.name,
-    //   })
-    // );
-    // const [first, ...rest] = await Promise.all(promises);
-    // await Friend.create({ friendId: first.Friend });
+
     console.log(chalk.inverse('Seeding success!'));
     console.log(JSON.stringify(friends, null, 2));
   } catch (err) {
     console.error('Oh there is an error!');
     console.error(err.stack);
-    //conn.close();
   }
+  //conn.close();
 };
 
 module.exports = {
   friendsList,
-  //conn,
   models: {
     Friend,
   },
 };
-
-//friendsList();

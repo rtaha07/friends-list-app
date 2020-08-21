@@ -3,6 +3,7 @@ const express = require('express');
 const { Router } = require('express');
 const router = express.Router();
 const { Friend } = require('../db').models;
+const { render } = require('./renderer');
 
 router.get('/friends', async (req, res, next) => {
   try {
@@ -17,14 +18,14 @@ router.get('/friends', async (req, res, next) => {
   }
 });
 
-router.get('/friends/add', async (req, res, next) => {
+router.get('/friends', async (req, res, next) => {
   try {
     const friend = `
         <form method="POST" action="api/friends">
-        <input name="name" />
-        <button><span onclick="create()" class="addName">Create</span></button>
+        <input type="text" name="name" class="addName" />
+        <button type="button" class="addName">Create</button>
         </form>`;
-    // const List = document.getElementById('friends-list');
+    // const List = document.getElementById('friendsList');
     // List.innerHTML = friend;
     res.send(friend);
   } catch (err) {
@@ -36,25 +37,25 @@ router.post('/friends', async (req, res, next) => {
   try {
     const friend = await Friend.create(req.body.name);
     console.log(friend);
-    res.redirect(`/friends/add`);
-    //res.status(201).json(friend);
+    //res.redirect(`/friends`);
+    res.status(201).json(friend);
   } catch (err) {
     next(err);
   }
 });
 
-router.get('/data', async (req, res, next) => {
+router.get('/friends', async (req, res, next) => {
   try {
     const friends = await Friend.findAll();
     const friendsList = friends
       .map((friend) => {
         return `
             <h1>${friend.name} </h1>
-            <li className="friend-name" data-id='/friends/${friend.id}'>
+            <li classList="friend-name" data-id='/friends/${friend.id}'>
               <span>(${friend.ranking})</span>
-              <button type="button" id="subtract-friend" onclick="removeOne()">-</button>
-              <button type="button" id="add-friend" onclick="addOne()">+</button>
-              <button type="button" id="clear-name" onclick="delete(friend.name)">x</button>
+              <button type="button" id="subtract-friend">-</button>
+              <button type="button" id="add-friend">+</button>
+              <button type="button" id="clear-name">x</button>
             </li>
       `;
       })
@@ -71,11 +72,11 @@ router.get('/data', async (req, res, next) => {
 router.put('/friends/:id', async (req, res, next) => {
   try {
     const friend = await Friend.findByPk(req.params.id);
-    if (req.body.category === 'add-friend') {
+    if (req.body.category === 'adding') {
       await friend.increment('ranking');
-    } else if (req.body.category === 'subtract-friend') {
+    } else if (req.body.category === 'subtracting') {
       await friend.decrement('ranking');
-    } else if (req.body.category === 'clear-name') {
+    } else if (req.body.category === 'deleting') {
       await friend.delete('/friends/${id}');
     }
     await friend.update(req.body);

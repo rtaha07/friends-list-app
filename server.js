@@ -26,26 +26,9 @@ app.get('/', (req, res, next) => {
 // Friends routes
 app.use('/api', require('./src/index'));
 
-// app.get('/api/data', async (req, res, next) => {
-//   try {
-//     const friend = await Promise.all([Friend.findAll()]);
-//     res.send({ friend });
-//   } catch (ex) {
-//     next(ex);
-//   }
-// });
-
-// app.post('/api/friends', async (req, res, next) => {
-//   try {
-//     res.send(res.send(await Friend.create(req.body)));
-//   } catch (ex) {
-//     next(ex);
-//   }
-// });
-
 //Handle 404 errors
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
+  const err = Error('Not Found');
   err.status = 404;
   next(err);
 });
