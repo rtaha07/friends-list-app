@@ -1,5 +1,6 @@
 const axios = require('axios');
 const express = require('express');
+//const fs = require('fs');
 const { Router } = require('express');
 const router = express.Router();
 const { Friend } = require('../db').models;
@@ -18,21 +19,6 @@ router.get('/friends', async (req, res, next) => {
   }
 });
 
-router.get('/friends', async (req, res, next) => {
-  try {
-    const friend = `
-        <form method="POST" action="api/friends">
-        <input type="text" name="name" class="addName" />
-        <button type="button" class="addName">Create</button>
-        </form>`;
-    // const List = document.getElementById('friendsList');
-    // List.innerHTML = friend;
-    res.send(friend);
-  } catch (err) {
-    next(err);
-  }
-});
-
 router.post('/friends', async (req, res, next) => {
   try {
     const friend = await Friend.create(req.body.name);
@@ -43,30 +29,15 @@ router.post('/friends', async (req, res, next) => {
   }
 });
 
-router.get('/friends', async (req, res, next) => {
-  try {
-    const friends = await Friend.findAll();
-    const friendsList = friends
-      .map((friend) => {
-        return `
-            <h1>${friend.name} </h1>
-            <li classList="friend-name" data-id='/friends/${friend.id}'>
-              <span>(${friend.ranking})</span>
-              <button type="button" id="subtract-friend">-</button>
-              <button type="button" id="add-friend">+</button>
-              <button type="button" id="clear-name">x</button>
-            </li>
-      `;
-      })
-      .join('');
-    // const List = document.querySelector('#friendsList');
-    // List.innerHTML = friendsList;
-    console.log(req.body.ranking);
-    res.send(friendsList);
-  } catch (err) {
-    next(err);
-  }
-});
+// router.get('/friends', async (req, res, next) => {
+//   try {
+//     const friends = await Friend.findAll();
+//     console.log(req.body);
+//     res.send(friends);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 router.put('/friends/:id', async (req, res, next) => {
   try {
