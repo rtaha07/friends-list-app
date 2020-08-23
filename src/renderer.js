@@ -1,13 +1,5 @@
 const axios = require('axios');
 
-const init = async () => {
-  const response = await axios.get('/api/friends');
-  const friends = response.data;
-  render(friends);
-};
-
-init();
-
 const render = () => {
   const ul = document.querySelector('ul');
   ul.addEventListener('click', async (ev) => {
@@ -30,6 +22,14 @@ const render = () => {
     }
   });
 };
+
+const init = async () => {
+  const response = await axios.get('/api/friends');
+  const friends = response.data;
+  render(friends);
+};
+
+init();
 
 module.exports = {
   render,
