@@ -8,7 +8,7 @@ const init = async () => {
 
 init();
 
-const render () => {
+const render = () => {
   const ul = document.querySelector('ul');
   ul.addEventListener('click', async (ev) => {
     if (ev.target.tagName === 'BUTTON') {
@@ -29,7 +29,7 @@ const render () => {
       }
     }
   });
-}
+};
 
 module.exports = {
   render,
