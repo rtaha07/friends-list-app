@@ -37,7 +37,6 @@ router.post('/friends', async (req, res, next) => {
   try {
     const friend = await Friend.create(req.body.name);
     console.log(friend);
-    //res.redirect(`/friends`);
     res.status(201).json(friend);
   } catch (err) {
     next(err);
