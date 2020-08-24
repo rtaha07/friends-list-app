@@ -6,11 +6,11 @@ const render = (friends) => {
     .map((friend) => {
       return `
             <h1>${friend.name} </h1>
-            <li classList="friend-name" data-id='/friends/${friend.id}'>
-              <span>(${friend.ranking})</span>
-              <button type="button" id="subtract-friend">-</button>
-              <button type="button" id="add-friend">+</button>
-              <button type="button" id="clear-name">x</button>
+            <li classList="friend-name" data-id='${friend.id}'>
+              <span>(${friend.rating})</span>
+              <button type="button" class="subtract-friend">-</button>
+              <button type="button" class="add-friend">+</button>
+              <button type="button" class="clear-name">x</button>
             </li>
       `;
     })
@@ -20,19 +20,19 @@ const render = (friends) => {
 
   list.addEventListener('click', async (ev) => {
     if (ev.target.tagName === 'BUTTON') {
-      const buttonList = ev.target.classList.contains('friend-name');
+      const buttonList = ev.target.className;
       const id = ev.target.getAttribute('data-id');
       if (buttonList === 'add-friend') {
         await axios.put(`api/friends/${id}`, {
-          category: 'adding',
+          method: 'adding',
         });
       } else if (buttonList === 'subtract-friend') {
         await axios.put(`api/friends/${id}`, {
-          category: 'subtracting',
+          method: 'subtracting',
         });
       } else if (buttonList === 'clear-friend') {
         await axios.delete(`api/friends/${id}`, {
-          category: 'deleting',
+          method: 'deleting',
         });
       }
     }

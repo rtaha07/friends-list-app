@@ -3,20 +3,22 @@ const chalk = require('chalk');
 const { STRING, INTEGER } = Sequelize;
 const conn = new Sequelize(
   process.env.DATABASE_URL || 'postgres://localhost/friends_list'
-); //pass false to the logging parameter to prevent sequelize from outputting SQL to console on execution
+);
 
 const Friend = conn.define('friend', {
   name: {
     type: STRING,
     allowNull: false,
+    unique: true,
   },
-  ranking: {
+  rating: {
     type: INTEGER,
-    defaultValue: 1,
+    defaultValue: 5,
+    allowNull: false,
   },
 });
 
-Friend.belongsTo(Friend);
+//Friend.belongsTo(Friend);
 
 const friendsList = async () => {
   try {
@@ -25,23 +27,23 @@ const friendsList = async () => {
     const friends = await Promise.all([
       await Friend.create({
         name: 'Sally',
-        ranking: 1,
+        rating: 1,
       }),
       await Friend.create({
         name: 'John',
-        ranking: 2,
+        rating: 2,
       }),
       await Friend.create({
         name: 'Khalid',
-        ranking: 3,
+        rating: 3,
       }),
       await Friend.create({
         name: 'Catherine',
-        ranking: 4,
+        rating: 4,
       }),
       await Friend.create({
         name: 'Adam',
-        ranking: 5,
+        rating: 5,
       }),
     ]);
 

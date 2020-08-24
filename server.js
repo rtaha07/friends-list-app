@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -16,11 +17,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Static middleware
-app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, './public')));
 
 // For all GET requests that aren't going to a route, redirected to Homepage route
-app.get('/', (req, res, next) => {
-  res.render('index.html');
+app.get('/api', (req, res, next) => {
+  res.redirect('/');
 });
 
 // Friends routes
