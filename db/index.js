@@ -18,12 +18,10 @@ const Friend = conn.define('friend', {
   },
 });
 
-//Friend.belongsTo(Friend);
-
 const friendsList = async () => {
   try {
     await conn.sync({ force: true });
-    console.log('Syncing success!');
+    console.log(chalk.inverse('Syncing success!'));
     const friends = await Promise.all([
       await Friend.create({
         name: 'Sally',

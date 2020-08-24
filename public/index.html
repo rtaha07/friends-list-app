@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width initial-scale=1.0" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-
-<body>
-  <div class="container">
-    <h1>Friends (The List)</h1>
-    <form method="POST" action="api/friends">
-      <input type="text" name="name" class="addName" />
-      <input type="submit" value="Create" />
-    </form>
-    <div id="app" class="friends-list">
-      <ul id="friendsList"></ul>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width initial-scale=1.0" />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v0.40.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <!-- <script src="main.js" defer></script> -->
+    <script src="dist/main.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Friends (The List)</h1>
+      <form method="POST" action="api/friends">
+        <input type="text" name="name" class="addName" />
+        <input type="submit" value="Create" />
+      </form>
+      <div id="app" class="friends-list">
+        <ul id="friendsList"></ul>
+      </div>
     </div>
-  </div>
-  <script src="server.js" defer></script>
-</body>
-
+  </body>
 </html>

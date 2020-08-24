@@ -1,58 +1,88 @@
 const axios = require('axios');
-const express = require('express');
-const { Router } = require('express');
-const router = express.Router();
-const { Friend } = require('../db').models;
-const { render } = require('./renderer');
 
-router.get('/friends', async (req, res, next) => {
-  try {
-    const friends = await Friend.findAll({
-      attributes: ['id', 'name', 'rating'],
-      order: [['rating', 'DESC']],
-    });
-    //console.log(friends.rating);
-    res.send(friends);
-  } catch (err) {
-    next(err);
-  }
-});
+const render = (friends) => {
+  const list = document.querySelector('ul');
+  const friendsList = friends
+    .map((friend) => {
+      return `
+            <h2>${friend.name} </h2>
+            <li classList="friend-name" data-id='${friend.id}'>
+              <span>(${friend.rating})</span>
+              <button type="button" class="subtract-friend" >-</button>
+              <button type="button" class="add-friend" >+</button>
+              <button type="button" class="clear-name" >x</button>
+            </li>
+      `;
+    })
+    .join('');
+  list.innerHTML = friendsList;
+};
 
-router.post('/friends', async (req, res, next) => {
-  try {
-    const friend = await Friend.create({ name: req.body.name });
-    //console.log(friend);
-    await friend.save();
-    res.redirect('/');
-  } catch (err) {
-    next(err);
-  }
-});
+const init = async () => {
+  const response = await axios.get('/api/friends');
+  const friends = response.data;
+  render(friends);
 
-router.put('/friends/:id', async (req, res, next) => {
-  try {
-    const friend = await Friend.findByPk(req.params.id);
-    if (req.body.method === 'adding') {
-      await friend.increment('rating');
-    } else if (req.body.method === 'subtracting') {
-      await friend.decrement('rating');
-    } else if (req.body.method === 'deleting') {
-      await friend.delete('/friends/${id}');
+  const list = document.querySelector('ul');
+  list.addEventListener('click', async (ev) => {
+    if (ev.target.tagName === 'BUTTON') {
+      const buttonList = ev.target.className;
+      const id = ev.target.getAttribute('data-id');
+      if (buttonList === 'add-friend') {
+        await axios.put(`api/friends/${id}`, {
+          method: 'adding',
+        });
+      } else if (buttonList === 'subtract-friend') {
+        await axios.put(`api/friends/${id}`, {
+          method: 'subtracting',
+        });
+      } else if (buttonList === 'clear-friend') {
+        await axios.destroy(`api/friends/${id}`);
+      }
     }
-    await friend.update(req.body);
-    res.send(friend);
-  } catch (err) {
-    next(err);
-  }
-});
+  });
+};
 
-router.delete('/friends/:id', async (req, res, next) => {
-  try {
-    await Friend.destroy({ where: { id: req.params.id } });
-    res.sendStatus(204);
-  } catch (err) {
-    next(err);
-  }
-});
+// const init = async()=> {
+//   const response = await axios.get('/api/friends');
+//   let friends = response.data;
+//   render(friends);
+//   const list = document.querySelector('ul');
+//   const form = document.querySelector('form');
+//   const input = document.querySelector('input');
 
-module.exports = router;
+//   list.addEventListener('click', async(ev)=> {
+//     if(ev.target.tagName === 'BUTTON'){
+//       if(ev.target.innerHTML === 'x'){
+//         const id = ev.target.getAttribute('data-id')*1;
+//         await axios.delete(`/api/friends/${id}`);
+//         friends = friends.filter(friend => friend.id !== id);
+//         render(friends);
+//       }
+//       else {
+//         const id = ev.target.getAttribute('data-id')*1;
+//         const friend = friends.find(item => item.id === id);
+//         const increase = ev.target.innerHTML === '+';
+//         friend.rating = increase ? ++friend.rating : --friend.rating;
+//         await axios.put(`/api/friends/${friend.id}`, { rating: friend.rating });
+//         render(friends);
+//       }
+//     }
+//   });
+
+//   form.addEventListener('submit', async(ev)=> {
+//     ev.preventDefault();
+//       const response = await axios.post('/api/friends', { name: input.value });
+//       friends.push(response.data);
+//       input.value = '';
+//       render(friends);
+//   });
+// };
+
+// const init = async () => {
+//   const response = await axios.get('/api/friends');
+//   const friends = response.data;
+//   render(friends);
+//};
+
+init();
